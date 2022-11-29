@@ -8,11 +8,16 @@ export const Cidades = ({cidade, estado, onChange}) => {
     useEffect(() => {
         setLoading(true)
         const load = async () => {
+            try {
             const response = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${estado}/municipios?orderBy=nome`)
+            console.log(response)
             const data = await response.json()
             setCidades(data)
             //setTimeout(() => setLoading(false), 1000)
             setLoading(false)
+            }catch(e){
+                console.log(e)
+            }
         }
         if (estado) load()
         else setCidades([])

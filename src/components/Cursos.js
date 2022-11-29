@@ -6,7 +6,7 @@ import {Curso} from './Curso'
 
 export const Cursos = () => {
     const [cursos, setCursos] = useState([])
-
+    
     const addCurso = () => 
         setCursos([...cursos, {id: uuidv4(), nome: 'Novo Curso', turmas:[]}])
 
