@@ -5,6 +5,7 @@ export const Exemplo = () => {
     const [loading, setLoading] = useState(true)
     const [texto, setTexto] = useState("")
     const [itens, setItens] = useState([])
+    const [refetch, setRefetch] = useState(true)
 
     const disabled = texto.length === 0
     
@@ -16,24 +17,31 @@ export const Exemplo = () => {
 
     const add = async (e) =>{
         e.preventDefault()
+        var params = new URLSearchParams();
+        params.append('name', texto);
         setTexto("")
-    
+        const r = await axios.post(
+                `http://localhost/backend/index.php`, 
+                params
+            )
+
+        setRefetch(true)
     }
 
     useEffect(() => {
         const load = async () => {
+            setLoading(true)
             const r = await axios.get(
                 'http://localhost/backend/lista.php')
 
             setItens(r.data)
-            
+            setRefetch(false)
             setLoading(false)
         }
 
-        load()
-    }, [])
+        if (refetch) load()
+    }, [refetch])
 
-    console.log(loading)
     return (
         <div>
             <h2>Lista de Compras</h2>
@@ -42,12 +50,12 @@ export const Exemplo = () => {
                 <button disabled={disabled} onClick={add} type="button">+</button>
             
             {loading && <p>Aguarde...</p>}
-            {!loading && (<ul>
+            <ul>
                 {itens.map(item => <li key={item.id}>
                     <span>{item.nome}</span>
                     <button onClick={()=>remove(item.id)} type="button">-</button>
                 </li>)}
-            </ul>)}
+            </ul>
             
         </div>
     )
